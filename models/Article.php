@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "article".
@@ -70,5 +72,22 @@ class Article extends \yii\db\ActiveRecord
     {
         $this->image = $filename;
         return $this->save(false);
+    }
+
+    public function getImage()
+    {
+        return ($this->image) ? '/uploads/' . $this->image : '/no-image.png';
+    }
+
+    public function deleteImage()
+    {
+        $imageUploadModel =new ImageUpload();
+        $imageUploadModel->deleteCurrentImage($this->image);
+    }
+
+    public function beforeDelete()
+    {
+        $this->deleteImage();
+        return parent::beforeDelete();
     }
 }
