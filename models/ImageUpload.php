@@ -16,7 +16,7 @@ class ImageUpload extends Model
     {
         return [
             [['image'], 'required'],
-            [['image'], 'file', 'extensions' => 'jpg, png']
+            [['image'], 'file', 'extensions' => 'jpg,png']
         ];
     }
 
@@ -59,6 +59,9 @@ class ImageUpload extends Model
         }
     }
 
+    /**
+     * @return string
+     */
     public function saveImage()
     {
         $filename = $this->generateFilename();

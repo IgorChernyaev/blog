@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+
 use app\models\ImageUpload;
 use Yii;
 use app\models\Article;
@@ -146,5 +147,19 @@ class ArticleController extends Controller
         }
          
         return $this->render('image', ['model'=>$model]);
+    }
+
+    /**
+     * @param $id
+     * @throws NotFoundHttpException
+     */
+    public function actionSetCategory($id)
+    {
+        $article = $this->findModel($id);
+        echo '<pre>';
+        var_dump($article->category);
+
+        echo '</pre>';
+
     }
 }
