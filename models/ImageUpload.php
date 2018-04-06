@@ -55,13 +55,14 @@ class ImageUpload extends Model
     {
         if(!empty($currentImage) && $currentImage != null)
         {
-            return file_exists($this->getFolder() . $currentImage);
+            return is_file(filee_exists($this->getFolder() . $currentImage));
         }
     }
 
     /**
      * @return string
      */
+
     public function saveImage()
     {
         $filename = $this->generateFilename();
@@ -70,4 +71,3 @@ class ImageUpload extends Model
     }
 }
 
-?>

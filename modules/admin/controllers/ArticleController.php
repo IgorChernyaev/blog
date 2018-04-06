@@ -2,11 +2,12 @@
 
 namespace app\modules\admin\controllers;
 
-
+use app\models\Category;
 use app\models\ImageUpload;
 use Yii;
 use app\models\Article;
 use app\models\ArticleSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -132,17 +133,16 @@ class ArticleController extends Controller
     public function actionSetImage($id)
     {
         $model = new ImageUpload;
+        var_dump($article->image);
 
         if (Yii::$app->request->isPost)
         {
-            $article = $this->findModel($id);
             $file = UploadedFile::getInstance($model, 'image');
 
             if ($article->saveImage($model->uploadFile($file, $article->image)))
             {
                 return $this->redirect(['view', 'id'=>$article->id]);
             }
-
 
         }
          
@@ -156,10 +156,22 @@ class ArticleController extends Controller
     public function actionSetCategory($id)
     {
         $article = $this->findModel($id);
-        echo '<pre>';
-        var_dump($article->category);
+        $selectedCategory = $article->category->id;
+        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title');
 
+        echo '<pre>';
+        var_dump($categories);die;
         echo '</pre>';
+
+
+
+        return $this->render('category', [
+
+            'article'=>$article,
+            'selectedCategory'=>$selectedCategory,
+            'categories'=>$categories
+
+        ]);
 
     }
 }
