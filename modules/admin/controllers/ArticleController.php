@@ -133,19 +133,16 @@ class ArticleController extends Controller
     public function actionSetImage($id)
     {
         $model = new ImageUpload;
-        var_dump($article->image);
-
         if (Yii::$app->request->isPost)
         {
+            $article = $this->findModel($id);
             $file = UploadedFile::getInstance($model, 'image');
-
-            if ($article->saveImage($model->uploadFile($file, $article->image)))
+            if($article->saveImage($model->uploadFile($file, $article->image)))
             {
                 return $this->redirect(['view', 'id'=>$article->id]);
             }
-
         }
-         
+
         return $this->render('image', ['model'=>$model]);
     }
 
@@ -156,12 +153,18 @@ class ArticleController extends Controller
     public function actionSetCategory($id)
     {
         $article = $this->findModel($id);
-        $selectedCategory = $article->category->id;
+        $selectedCategory = ($article->category) ? $article->category->id : '0';
         $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title');
 
-        echo '<pre>';
-        var_dump($categories);die;
-        echo '</pre>';
+        if (Yii::$app->request->isPost)
+        {
+            $category = Yii::$app->request->post('category');
+            if($article->saveCategory($category))
+            {
+                return $this->redirect(['view', 'id'=>$article->id]);
+            }
+
+        }
 
 
 

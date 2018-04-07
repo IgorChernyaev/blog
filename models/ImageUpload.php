@@ -55,7 +55,7 @@ class ImageUpload extends Model
     {
         if(!empty($currentImage) && $currentImage != null)
         {
-            return is_file(filee_exists($this->getFolder() . $currentImage));
+            return file_exists($this->getFolder() . $currentImage);
         }
     }
 
