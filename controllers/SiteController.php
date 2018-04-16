@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Article;
 use app\models\Category;
+use app\models\CommentForm;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -87,6 +88,8 @@ class SiteController extends Controller
         $popular = Article::getPopular();
         $recent = Article::getRecent();
         $categories = Category::getAll();
+        $comments = $article->getArticleComments();
+        $commentForm = new CommentForm();
 
 
         return $this->render('single',[
@@ -94,7 +97,9 @@ class SiteController extends Controller
             'tags'=>$tags,
             'popular'=>$popular,
             'recent'=>$recent,
-            'categories'=>$categories
+            'categories'=>$categories,
+            'comments'=>$comments,
+            'commentForm'=>$commentForm
         ]);
     }
 
@@ -106,13 +111,14 @@ class SiteController extends Controller
         $recent = Article::getRecent();
         $categories = Category::getAll();
 
-       return $this->render('category',[
+
+        return $this->render('category',[
             'articles'=>$data['articles'],
             'pagination'=>$data['pagination'],
             'popular'=>$popular,
             'recent'=>$recent,
-            'categories'=>$categories
-       ]);
+            'categories'=>$categories,
+        ]);
     }
 
     /**
@@ -140,6 +146,21 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionComment($id)
+    {
+        $model = new CommentForm();
+
+        if(Yii::$app->request->isPost)
+        {
+            $model->load(Yii::$app->request->post());
+            if($model->saveComment($id))
+            {
+                Yii::$app->getSession()->setFlash('comment', 'Your comment will be added soon!');
+                return $this->redirect(['site/view','id'=>$id]);
+            }
+        }
+    }
+
     /**
      * Displays about page.
      *
@@ -149,4 +170,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
 }
